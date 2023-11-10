@@ -9,8 +9,8 @@ class Branch(example_pb2_grpc.BranchServicer):
         self.branches = branches
         self.stubList = list()
         self.recvMsg = list()
+        self.events = list()
         self.logical_clock = 1
-
 
     # Setup gRPC channel & client stub for each branch
     def createStubs(self):
@@ -19,14 +19,15 @@ class Branch(example_pb2_grpc.BranchServicer):
             for branchId in self.branches if branchId != self.id
         ]
 
+    def getStubs(self):
+        return self.stubList
+
     def extendedMsgForProp(self, request, propagate):
         result = "success"
         logical_clock = self.logical_clock
 
         if request.money < 0:
             result = "fail"
-        elif request.interface == "query":
-            return example_pb2.MsgResponse(interface=request.interface, money=self.balance, logical_clock=logical_clock)
         elif request.interface == "deposit":
             self.balance += request.money
             logical_clock += 1
@@ -44,18 +45,20 @@ class Branch(example_pb2_grpc.BranchServicer):
             result = "fail"
 
         msg = {
-            "interface": request.interface,
-            "result": result,
+            "customer-request-id": request.customer_request_id,
             "logical_clock": logical_clock,
+            "interface": request.interface,
+            "comment": f"event_sent to branch {self.id}" if propagate else f"event_recv from branch {request.id}",
         }
 
-        if request.interface != "query":
-            msg["result"] = result
-        else:
-            msg["money"] = request.money
+        msg["result"] = result
         self.recvMsg.append(msg)
-        return example_pb2.MsgResponse(interface=request.interface, customer_request_id = request.customer_request_id, result=result, logical_clock=logical_clock)
-
+        return example_pb2.MsgResponse(
+            interface=request.interface,
+            customer_request_id=request.customer_request_id,
+            result=result,
+            logical_clock=logical_clock,
+        )
     def Propagate_Withdraw(self, request, logical_clock):
         for stub in self.stubList:
             stub.MsgPropagation(example_pb2.MsgRequest(id=request.id, interface="withdraw", customer_request_id = request.customer_request_id, logical_clock=logical_clock))
@@ -66,8 +69,13 @@ class Branch(example_pb2_grpc.BranchServicer):
 
     def MsgDelivery(self, request, context):
         self.logical_clock += 1
+        self.events.append({"customer-request-id": request.customer_request_id, "logical_clock": self.logical_clock, "interface": request.interface, "comment": "event sent to " + str(request.id)})
         return self.extendedMsgForProp(request, True)
 
     def MsgPropagation(self, request, context):
         self.logical_clock = max(self.logical_clock, request.logical_clock) + 1
+        self.events.append({"customer-request-id": request.customer_request_id, "logical_clock": self.logical_clock, "interface": request.interface, "comment": "event sent to " + str(request.id)})
         return self.extendedMsgForProp(request, False)
+
+    def output(self):
+        return self.events

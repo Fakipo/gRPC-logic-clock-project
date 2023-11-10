@@ -1,0 +1,3 @@
+grpcio - version 1.59.0
+grpcio_tools - version 1.59.0
+protobuf – version 4.24.4

@@ -1,0 +1,56 @@
+[
+{
+  "id": 1,
+  "type": "customer",
+  "events": [
+    {
+      "customer-request-id": 1,
+      "logical_clock": 3,
+      "interface": "deposit",
+      "comment": "event_sent from customer1"
+    },
+    {
+      "customer-request-id": 2,
+      "logical_clock": 4,
+      "interface": "withdraw",
+      "comment": "event_sent from customer1"
+    }
+  ]
+},
+{
+  "id": 2,
+  "type": "customer",
+  "events": [
+    {
+      "customer-request-id": 3,
+      "logical_clock": 7,
+      "interface": "deposit",
+      "comment": "event_sent from customer2"
+    },
+    {
+      "customer-request-id": 4,
+      "logical_clock": 8,
+      "interface": "withdraw",
+      "comment": "event_sent from customer2"
+    }
+  ]
+},
+{
+  "id": 3,
+  "type": "customer",
+  "events": [
+    {
+      "customer-request-id": 5,
+      "logical_clock": 11,
+      "interface": "deposit",
+      "comment": "event_sent from customer3"
+    },
+    {
+      "customer-request-id": 6,
+      "logical_clock": 12,
+      "interface": "withdraw",
+      "comment": "event_sent from customer3"
+    }
+  ]
+}
+]

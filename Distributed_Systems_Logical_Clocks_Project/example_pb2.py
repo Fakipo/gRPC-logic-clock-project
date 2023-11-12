@@ -13,17 +13,19 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rexample.proto\"_\n\nMsgRequest\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x11\n\tinterface\x18\x02 \x01(\t\x12\x1b\n\x13\x63ustomer_request_id\x18\x03 \x01(\x05\x12\x15\n\rlogical_clock\x18\x04 \x01(\x05\"T\n\x0bMsgResponse\x12\x11\n\tinterface\x18\x01 \x01(\t\x12\x1b\n\x13\x63ustomer_request_id\x18\x02 \x01(\x05\x12\x15\n\rlogical_clock\x18\x03 \x01(\x05\x32\x63\n\x06\x42ranch\x12*\n\x0bMsgDelivery\x12\x0b.MsgRequest\x1a\x0c.MsgResponse\"\x00\x12-\n\x0eMsgPropagation\x12\x0b.MsgRequest\x1a\x0c.MsgResponse\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rexample.proto\"\x9b\x01\n\nMsgRequest\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x11\n\tinterface\x18\x02 \x01(\t\x12\x1b\n\x13\x63ustomer_request_id\x18\x03 \x01(\x05\x12\x15\n\rlogical_clock\x18\x04 \x01(\x05\x12:\n\x1d\x62ranch_to_customer_req_id_map\x18\x05 \x03(\x0b\x32\x13.CustomerRequestMap\"R\n\x12\x43ustomerRequestMap\x12\x11\n\tbranch_id\x18\x01 \x01(\x05\x12)\n!corresponding_customer_request_id\x18\x02 \x03(\x05\"T\n\x0bMsgResponse\x12\x11\n\tinterface\x18\x01 \x01(\t\x12\x1b\n\x13\x63ustomer_request_id\x18\x02 \x01(\x05\x12\x15\n\rlogical_clock\x18\x03 \x01(\x05\x32\x63\n\x06\x42ranch\x12*\n\x0bMsgDelivery\x12\x0b.MsgRequest\x1a\x0c.MsgResponse\"\x00\x12-\n\x0eMsgPropagation\x12\x0b.MsgRequest\x1a\x0c.MsgResponse\"\x00\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'example_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
-  _globals['_MSGREQUEST']._serialized_start=17
-  _globals['_MSGREQUEST']._serialized_end=112
-  _globals['_MSGRESPONSE']._serialized_start=114
-  _globals['_MSGRESPONSE']._serialized_end=198
-  _globals['_BRANCH']._serialized_start=200
-  _globals['_BRANCH']._serialized_end=299
+  _globals['_MSGREQUEST']._serialized_start=18
+  _globals['_MSGREQUEST']._serialized_end=173
+  _globals['_CUSTOMERREQUESTMAP']._serialized_start=175
+  _globals['_CUSTOMERREQUESTMAP']._serialized_end=257
+  _globals['_MSGRESPONSE']._serialized_start=259
+  _globals['_MSGRESPONSE']._serialized_end=343
+  _globals['_BRANCH']._serialized_start=345
+  _globals['_BRANCH']._serialized_end=444
 # @@protoc_insertion_point(module_scope)

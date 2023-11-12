@@ -12,6 +12,7 @@ class Branch(example_pb2_grpc.BranchServicer):
         self.recvMsg = list()
         self.events = list()
         self.logical_clock = 1
+        self.branch_id_map = {}
     # Setup gRPC channel & client stub for each branch
     def createStubs(self):
         print('creating stub')
@@ -78,7 +79,7 @@ class Branch(example_pb2_grpc.BranchServicer):
             if j != self.id:
                 self.logical_clock += 1
                 msg = {
-                    "customer-request-id": request.customer_request_id,
+                    "customer-request-id": self.branch_id_map[j][1],
                     "logical_clock": self.logical_clock,
                     "interface": "propogate_" + request.interface,
                     "comment": f"event_recv by branch {j}",
@@ -93,7 +94,7 @@ class Branch(example_pb2_grpc.BranchServicer):
             if j != self.id:
                 self.logical_clock += 1
                 msg = {
-                    "customer-request-id": request.customer_request_id,
+                    "customer-request-id": self.branch_id_map[j][0],
                     "logical_clock": self.logical_clock,
                     "interface": "propogate_" + request.interface,
                     "comment": f"event_recv by branch {j}",
@@ -102,8 +103,26 @@ class Branch(example_pb2_grpc.BranchServicer):
             for stub in self.stubList:
                 stub.MsgPropagation(example_pb2.MsgRequest(id=request.id, interface="deposit", customer_request_id = request.customer_request_id, logical_clock=logical_clock))
 
+    def storeInMap(self, request):
+        for customer_request_map in request.branch_to_customer_req_id_map:
+            branch_id = customer_request_map.branch_id
+            corresponding_customer_request_ids = customer_request_map.corresponding_customer_request_id
+
+            # Check if the branch_id is already a key in the map
+            if branch_id in self.branch_id_map:
+                self.branch_id_map[branch_id].extend(corresponding_customer_request_ids)
+            else:
+                self.branch_id_map[branch_id] = corresponding_customer_request_ids
+
     def MsgDelivery(self, request, context):
-        print('current customer id :' + str(request.id))
+        # print('current customer id :' + str(request.id))
+        # print('branch to customer : ' )
+        # print(request.branch_to_customer_req_id_map)
+        if not self.branch_id_map:
+            self.storeInMap(request)
+        # print('store in map = ' )
+        # print(self.branch_id_map)
+        # print("request done")
         self.logical_clock = request.logical_clock
         comment = f"event_recv from customer {request.id}"
         self.events.append({"customer-request-id": request.customer_request_id, "logical_clock": self.logical_clock, "interface": request.interface, "comment": comment})

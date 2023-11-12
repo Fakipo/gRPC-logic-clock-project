@@ -22,6 +22,17 @@ def initialize_processes_from_input(processes):
     branchProcessList = []
     branch_stubs = []
 
+    branch_to_customer_req_id_map = {}
+
+    for entry in processes:
+        if entry["type"] == "customer":
+            customer_id = entry["id"]
+            request_ids = [req["customer-request-id"] for req in entry["customer-requests"]]
+            branch_to_customer_req_id_map[customer_id] = request_ids
+
+    print(branch_to_customer_req_id_map)
+
+
     for process in processes:
         if process["type"] == "branch":
             branch = Branch(process["id"], process["balance"], branchIds)
@@ -44,7 +55,7 @@ def initialize_processes_from_input(processes):
 
     for process in processes:
         if process["type"] == "customer":
-            customer = Customer(process["id"], process["customer-requests"])
+            customer = Customer(process["id"], process["customer-requests"], branch_to_customer_req_id_map)
             customers.append(customer)
 
     initiate_customers_from_list(customers, customerProcessList, branch_stubs)
@@ -117,6 +128,36 @@ def closeOutputFile2():
     with open("output2.json", "a") as output_file:
         output_file.write("\n]")
 
+def create_output3(customer_events, branch_events):
+    output3 = []
+
+    for customer_event in customer_events:
+        customer_request_id = customer_event['events'][0]['customer-request-id']
+
+        # Add customer event to output3
+        output3.append({
+            'id': customer_event['id'],
+            'customer-request-id': customer_request_id,
+            'type': 'customer',
+            'logical_clock': customer_event['events'][0]['logical_clock'],
+            'interface': customer_event['events'][0]['interface'],
+            'comment': customer_event['events'][0]['comment']
+        })
+
+        # Add corresponding branch events to output3
+        for branch_event in branch_events:
+            if branch_event['events'][0]['customer-request-id'] == customer_request_id:
+                output3.append({
+                    'id': branch_event['id'],
+                    'customer-request-id': customer_request_id,
+                    'type': 'branch',
+                    'logical_clock': branch_event['events'][1]['logical_clock'],
+                    'interface': branch_event['events'][1]['interface'],
+                    'comment': branch_event['events'][1]['comment']
+                })
+
+    return output3
+
 def theCallFunc():
     try:
         # Read input data from input.json
@@ -128,7 +169,19 @@ def theCallFunc():
         closeOutputFile2() # Close the json array with a closing bracket for output file number 2
 
         sleep(2)
-        co
+
+        with open('output.json', 'r') as file:
+            output_json = json.load(file)
+
+        with open('output2.json', 'r') as file:
+            output2_json = json.load(file)
+
+        # Generate output3.json
+            output3_json = create_output3(output_json, output2_json)
+
+        with open('output3.json', 'w') as file:
+            json.dump(output3_json, file, indent=2)
+
     except FileNotFoundError:
         print("input.json not found")
     except Exception as e:
@@ -136,44 +189,3 @@ def theCallFunc():
 
 if __name__ == "__main__":
     theCallFunc()
-
-
-    def combine_events(customer_events, branch_events):
-        combined_events = []
-
-        for customer_event in customer_events:
-            customer_id = customer_event['id']
-            for event in customer_event['events']:
-                combined_event = {
-                    'id': customer_id,
-                    'customer-request-id': event['customer-request-id'],
-                    'type': 'customer',
-                    'logical_clock': event['logical_clock'],
-                    'interface': event['interface'],
-                    'comment': event['comment'],
-                }
-                combined_events.append(combined_event)
-
-        for branch_event in branch_events:
-            branch_id = branch_event['id']
-            for event in branch_event['events']:
-                combined_event = {
-                    'id': branch_id,
-                    'customer-request-id': event['customer-request-id'],
-                    'type': 'branch',
-                    'logical_clock': event['logical_clock'],
-                    'interface': event['interface'],
-                    'comment': event['comment'],
-                }
-                combined_events.append(combined_event)
-
-        return combined_events
-
-    # Example usage:
-    customer_events = [...]  # Your list of customer events
-    branch_events = [...]    # Your list of branch events
-
-    combined_events = combine_events(customer_events, branch_events)
-
-    # Print or write combined_events as needed
-    print(combined_events)

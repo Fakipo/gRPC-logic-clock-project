@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "customer-request-id": 1,
+    "type": "customer",
+    "logical_clock": 1,
+    "interface": "deposit",
+    "comment": "event_sent from customer 1"
+  },
+  {
+    "id": 1,
+    "customer-request-id": 1,
+    "type": "branch",
+    "logical_clock": 3,
+    "interface": "propagate_deposit",
+    "comment": "event_sent to branch 2"
+  },
+  {
+    "id": 2,
+    "customer-request-id": 3,
+    "type": "customer",
+    "logical_clock": 1,
+    "interface": "deposit",
+    "comment": "event_sent from customer 2"
+  },
+  {
+    "id": 2,
+    "customer-request-id": 3,
+    "type": "branch",
+    "logical_clock": 3,
+    "interface": "propagate_deposit",
+    "comment": "event_sent to branch 1"
+  },
+  {
+    "id": 3,
+    "customer-request-id": 5,
+    "type": "customer",
+    "logical_clock": 1,
+    "interface": "deposit",
+    "comment": "event_sent from customer 3"
+  },
+  {
+    "id": 3,
+    "customer-request-id": 5,
+    "type": "branch",
+    "logical_clock": 3,
+    "interface": "propagate_deposit",
+    "comment": "event_sent to branch 1"
+  }
+]

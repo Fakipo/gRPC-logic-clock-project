@@ -5,6 +5,13 @@ message MsgRequest {
     string interface = 2;
     int32 customer_request_id = 3;
     int32 logical_clock = 4; // Add a logical clock field
+    repeated CustomerRequestMap branch_to_customer_req_id_map = 5;
+
+}
+
+message CustomerRequestMap {
+    int32 branch_id = 1;
+    repeated int32 corresponding_customer_request_id = 2;
 }
 
 message MsgResponse {

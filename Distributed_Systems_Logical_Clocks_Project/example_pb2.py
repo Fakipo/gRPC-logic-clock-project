@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rexample.proto\"n\n\nMsgRequest\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x11\n\tinterface\x18\x02 \x01(\t\x12\r\n\x05money\x18\x03 \x01(\x05\x12\x1b\n\x13\x63ustomer_request_id\x18\x04 \x01(\x05\x12\x15\n\rlogical_clock\x18\x05 \x01(\x05\"s\n\x0bMsgResponse\x12\x11\n\tinterface\x18\x01 \x01(\t\x12\x0e\n\x06result\x18\x02 \x01(\t\x12\r\n\x05money\x18\x03 \x01(\x05\x12\x1b\n\x13\x63ustomer_request_id\x18\x04 \x01(\x05\x12\x15\n\rlogical_clock\x18\x05 \x01(\x05\x32\x63\n\x06\x42ranch\x12*\n\x0bMsgDelivery\x12\x0b.MsgRequest\x1a\x0c.MsgResponse\"\x00\x12-\n\x0eMsgPropagation\x12\x0b.MsgRequest\x1a\x0c.MsgResponse\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rexample.proto\"_\n\nMsgRequest\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x11\n\tinterface\x18\x02 \x01(\t\x12\x1b\n\x13\x63ustomer_request_id\x18\x03 \x01(\x05\x12\x15\n\rlogical_clock\x18\x04 \x01(\x05\"T\n\x0bMsgResponse\x12\x11\n\tinterface\x18\x01 \x01(\t\x12\x1b\n\x13\x63ustomer_request_id\x18\x02 \x01(\x05\x12\x15\n\rlogical_clock\x18\x03 \x01(\x05\x32\x63\n\x06\x42ranch\x12*\n\x0bMsgDelivery\x12\x0b.MsgRequest\x1a\x0c.MsgResponse\"\x00\x12-\n\x0eMsgPropagation\x12\x0b.MsgRequest\x1a\x0c.MsgResponse\"\x00\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -21,9 +21,9 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'example_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
   _globals['_MSGREQUEST']._serialized_start=17
-  _globals['_MSGREQUEST']._serialized_end=127
-  _globals['_MSGRESPONSE']._serialized_start=129
-  _globals['_MSGRESPONSE']._serialized_end=244
-  _globals['_BRANCH']._serialized_start=246
-  _globals['_BRANCH']._serialized_end=345
+  _globals['_MSGREQUEST']._serialized_end=112
+  _globals['_MSGRESPONSE']._serialized_start=114
+  _globals['_MSGRESPONSE']._serialized_end=198
+  _globals['_BRANCH']._serialized_start=200
+  _globals['_BRANCH']._serialized_end=299
 # @@protoc_insertion_point(module_scope)

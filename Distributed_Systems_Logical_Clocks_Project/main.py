@@ -76,7 +76,7 @@ def startBranchServers(branch):
     sleep(0.5 * branch.id)
     output = ({"id": branch.id, "type":"branch","events": branch.output()})
     writeOutputToFile2(output)
-
+    sleep(1)
     server.wait_for_termination()
 
 def customerProcessing(customer, branch_stubs):
@@ -88,7 +88,7 @@ def customerProcessing(customer, branch_stubs):
     # Write combined output to output files
     writeOutputToFile(combined_output[0])
     # writeOutputToFile2(combined_output[1])
-
+    sleep(2)
 
 def writeOutputToFile(output):
     with open("output.json", "a") as output_file:
@@ -126,6 +126,9 @@ def theCallFunc():
         initialize_processes_from_input(input_data)
         closeOutputFile()  # Close the JSON array with a closing bracket
         closeOutputFile2() # Close the json array with a closing bracket for output file number 2
+
+        sleep(2)
+        co
     except FileNotFoundError:
         print("input.json not found")
     except Exception as e:
@@ -133,3 +136,44 @@ def theCallFunc():
 
 if __name__ == "__main__":
     theCallFunc()
+
+
+    def combine_events(customer_events, branch_events):
+        combined_events = []
+
+        for customer_event in customer_events:
+            customer_id = customer_event['id']
+            for event in customer_event['events']:
+                combined_event = {
+                    'id': customer_id,
+                    'customer-request-id': event['customer-request-id'],
+                    'type': 'customer',
+                    'logical_clock': event['logical_clock'],
+                    'interface': event['interface'],
+                    'comment': event['comment'],
+                }
+                combined_events.append(combined_event)
+
+        for branch_event in branch_events:
+            branch_id = branch_event['id']
+            for event in branch_event['events']:
+                combined_event = {
+                    'id': branch_id,
+                    'customer-request-id': event['customer-request-id'],
+                    'type': 'branch',
+                    'logical_clock': event['logical_clock'],
+                    'interface': event['interface'],
+                    'comment': event['comment'],
+                }
+                combined_events.append(combined_event)
+
+        return combined_events
+
+    # Example usage:
+    customer_events = [...]  # Your list of customer events
+    branch_events = [...]    # Your list of branch events
+
+    combined_events = combine_events(customer_events, branch_events)
+
+    # Print or write combined_events as needed
+    print(combined_events)

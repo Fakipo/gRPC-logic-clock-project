@@ -127,40 +127,39 @@ def writeOutputToFile2(output):
 def closeOutputFile2():
     with open("output2.json", "a") as output_file:
         output_file.write("\n]")
-
 def create_output3(customer_events, branch_events):
     output3 = []
 
+    # Process customer events
     for customer_event in customer_events:
-        customer_request_id = customer_event['events'][0]['customer-request-id']
-
-        # Add customer event to output3
-        output3.append({
-            'id': customer_event['id'],
-            'customer-request-id': customer_request_id,
-            'type': 'customer',
-            'logical_clock': customer_event['events'][0]['logical_clock'],
-            'interface': customer_event['events'][0]['interface'],
-            'comment': customer_event['events'][0]['comment']
-        })
-
-        # Add corresponding branch events to output3
-        for branch_event in branch_events:
-            if branch_event['events'][0]['customer-request-id'] == customer_request_id:
-                output3.append({
-                    'id': branch_event['id'],
-                    'customer-request-id': customer_request_id,
-                    'type': 'branch',
-                    'logical_clock': branch_event['events'][1]['logical_clock'],
-                    'interface': branch_event['events'][1]['interface'],
-                    'comment': branch_event['events'][1]['comment']
-                })
-
+        # Add customer events to output3
+        for event in customer_event['events']:
+            customer_request_id = event['customer-request-id']
+            output3.append({
+                'id': customer_event['id'],
+                'customer-request-id': event['customer-request-id'],
+                'type': 'customer',
+                'logical_clock': event['logical_clock'],
+                'interface': event['interface'],
+                'comment': event['comment']
+            })
+            for branch_event in branch_events:
+                for event in branch_event['events']:
+                    if event['customer-request-id'] == customer_request_id:
+                        output3.append({
+                            'id': branch_event['id'],
+                            'customer-request-id': event['customer-request-id'],
+                            'type': 'branch',
+                            'logical_clock': event['logical_clock'],  # Keep the logical clock as it is
+                            'interface': event['interface'],
+                            'comment': event['comment']
+                        })
     return output3
+
 
 def theCallFunc():
     try:
-        # Read input data from input.json
+        #Read input data from input.json
         input_data = read_input_file('input.json')
         open("output.json", "w").close()
         open("output2.json", "w").close()

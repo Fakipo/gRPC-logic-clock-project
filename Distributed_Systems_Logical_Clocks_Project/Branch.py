@@ -15,7 +15,6 @@ class Branch(example_pb2_grpc.BranchServicer):
         self.branch_id_map = {}
     # Setup gRPC channel & client stub for each branch
     def createStubs(self):
-        print('creating stub')
 
         self.stubList = [
             example_pb2_grpc.BranchStub(grpc.insecure_channel(f"localhost:{60000 + branchId}"))
@@ -28,9 +27,6 @@ class Branch(example_pb2_grpc.BranchServicer):
 
     def extendedMsgForProp(self, request, propagate):
         logical_clock = self.logical_clock
-        # print('current request id = ', request.id , " and propagate = ", propagate)
-        # print('stublist = ' , self.stubList)
-        print('branches = ', len(self.branches))
         if request.interface == "deposit":
             self.logical_clock += 1
             if propagate:
@@ -115,14 +111,8 @@ class Branch(example_pb2_grpc.BranchServicer):
                 self.branch_id_map[branch_id] = corresponding_customer_request_ids
 
     def MsgDelivery(self, request, context):
-        # print('current customer id :' + str(request.id))
-        # print('branch to customer : ' )
-        # print(request.branch_to_customer_req_id_map)
         if not self.branch_id_map:
             self.storeInMap(request)
-        # print('store in map = ' )
-        # print(self.branch_id_map)
-        # print("request done")
         self.logical_clock = request.logical_clock
         comment = f"event_recv from customer {request.id}"
         self.events.append({"customer-request-id": request.customer_request_id, "logical_clock": self.logical_clock, "interface": request.interface, "comment": comment})

@@ -50,7 +50,6 @@ class Customer:
                 "interface": event["interface"],
                 "comment": f"event_sent from customer {id}",
             }
-            print('logical clock in customer is =' , response.logical_clock)
             self.local_clock += 1
             self.logical_clock = response.logical_clock + 1
             self.recvMsg.append(stringToAppend)

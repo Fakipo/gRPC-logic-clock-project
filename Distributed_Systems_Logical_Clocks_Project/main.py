@@ -30,7 +30,6 @@ def initialize_processes_from_input(processes):
             request_ids = [req["customer-request-id"] for req in entry["customer-requests"]]
             branch_to_customer_req_id_map[customer_id] = request_ids
 
-    print(branch_to_customer_req_id_map)
 
 
     for process in processes:
